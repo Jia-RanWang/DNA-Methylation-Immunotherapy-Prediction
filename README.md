@@ -135,21 +135,34 @@ BiocManager::install(c(
     CpG-基因映射 → GO/KEGG/Reactome/DO富集 → 基因组分布分析 → HLA免疫逃逸机制绘图。
 
 ## 5 代码文件说明
-```
+```text
 ./
-├── 毕业论文代码.R           # 唯一完整主分析脚本，按论文章节分段，带标准化中文注释
-├── data/                    # 原始输入数据目录（需自行下载GEO/TCGA放入）
-├── output/                  # 全部分析输出结果（运行自动生成子文件夹）
-│   ├── 01_data_preprocess/ # 预处理后甲基化矩阵、样本分组表
-│   ├── 02_signature_label/  # TMB/GEP/TGF-β评分、TCGA虚拟标签文件
-│   ├── 03_diff_methyl/     # limma差异分析表、火山图
-│   ├── 04_feature_select/  # 7种算法筛选CpG列表、特征重要性图表
-│   ├── 05_ml_model/        # 8类机器学习模型权重、预测结果、评估指标
-│   ├── 06_shap_analysis/   # SHAP数值文件、全套SHAP可视化图表
-│   ├── 07_enrichment/      # GO/KEGG/Reactome/DO富集表格与气泡图/条形图
-│   └── figures_paper/      # 论文全部标准绘图（技术路线、ROC、热图、机制图等）
-├── LICENSE                  # MIT开源协议
-└── README.md                # 本项目说明文档
+├── README.md                         # 项目主页说明
+├── LICENSE                           # MIT 开源许可证
+├── .gitignore                        # Git 忽略规则
+│
+├── data/                             # 数据文件目录
+│   ├── raw/                          # 原始输入数据：GEO、TCGA甲基化、MAF、表达及临床文件
+│   └── processed/                    # 预处理后的甲基化矩阵、样本分组及中间数据
+│
+├── code/                             # 全部分析脚本，按以下顺序依次运行
+│   ├── 01_download_data.R            # 下载、整理GEO与TCGA原始多组学数据
+│   ├── 02_preprocess.R               # 数据质控、缺失值处理、BMIQ归一化、ComBat校正及标签构建
+│   ├── 03_limma_diff.R               # limma差异甲基化位点分析与候选CpG初筛
+│   ├── 04_LASSO_feature.R            # LASSO及多算法特征筛选、RF-RFE最优特征集确定
+│   ├── 05_ML_model.R                 # 8类机器学习模型训练、调参与独立外部测试集评估
+│   ├── 06_SHAP_analysis.R            # Kernel SHAP模型解释、核心CpG重要性分析与可视化
+│   ├── 07_enrichment.R               # CpG靶基因注释及GO、KEGG、Reactome、DO功能富集分析
+│   └── 08_plot_figure.R              # ROC、热图、校准曲线、DCA及论文图件汇总绘制
+│
+├── results/                          # 全部分析输出结果
+│   ├── tables/                       # 数值结果表：差异CpG、特征列表、模型指标、ROC及富集结果
+│   ├── figures/                      # 论文图件：PNG、PDF及高分辨率TIFF文件
+│   └── rdata/                        # 中间R对象、训练模型及可复用RDS文件
+│
+└──docs/                             # 补充材料
+   ├── supplementary.md              # 补充方法、补充结果与数据说明
+   └── flowchart.pdf                 # 完整生物信息学分析流程图
 ```
 
 ## 6 输入文件规范
